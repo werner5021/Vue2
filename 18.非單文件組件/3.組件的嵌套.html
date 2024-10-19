@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="UTF-8">
+      <title>組件的嵌套</title>
+      <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <body>
+      <div id="root">
+        <app></app>
+      </div>
+  </body>
+  <script type="text/javascript">
+    // 定義 student 組件
+    const student = Vue.extend({
+      name: "student",
+      template: `
+        <div>
+          <h2>學生名稱: {{name}}</h2>
+          <h2>學生年齡: {{age}}</h2>
+        </div>
+      `,
+      data() {
+        return {
+          name: "小蘭姐節",
+          age: "18",
+        }
+      }
+    })
+
+    // 定義 school 組件
+    const school = Vue.extend({
+      name: "school",
+      template: `
+        <div>
+          <h2>學校名稱: {{name}}</h2>
+          <h2>學校地址: {{address}}</h2>
+          <student></student>
+        </div>
+      `,
+      data() {
+        return {
+          name: "上硅谷",
+          address: "北京",
+        }
+      },
+      // 註冊組件(局部)
+      components: {
+        student
+      }
+    })
+
+    // 定義 hello 組件
+    const hello = Vue.extend({
+      template:`<h1>{{msg}}</h1>`,
+      data(){
+        return {
+          msg: "歡迎學習 vue "
+        }
+      }
+    })
+
+     // 定義 app 組件，實際開發習慣在vm下設app管理所有組件
+     const app = Vue.extend({
+      template: `
+        <div>
+          <hello></hello>
+          <school></school>
+        </div>
+      `,
+      components: {
+        school,
+        hello,
+      }
+    })
+
+
+    new Vue({
+      el: "#root",
+      // template: '<app></app>',  // 如果 html 裡面不想寫 app，也可以在template配置項中寫 app
+      // 註冊組件(局部)
+      components: {
+        app
+      }
+    })
+
+</script>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>v-text</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <!--
+      需求一: 定義一個v-big指令，和v-text功能類似，但會把綁定的數值放大10倍
+      需求二: 定義一個v-fbind指令，和v-bind功能類似，但可以讓其所綁定的inpu元素默認獲取焦點
+      自定義指令總結:
+        1.定義語法:
+          (1)局部指令  new Vue({directives:{指令名:配置對象}}) 或 new Vue({directives(){}}) 
+          (2)全局指令  Vue.directive(指令名，配置對象) 或 Vue.directive(指令名，回調函數)
+        2.配置對象中常用的3個回調:
+          (1)bind:   指令元素成功綁定時調用
+          (2)insert: 指令所在元素被插入頁面時調用
+          (3)update: 指令所在模板結構被重新解析時調用
+        3.備註:
+          (1)指令定義時不加 v-，但使用時要加 v-
+          (2)指令名如果是多個單詞，要使用kebab-case命名方式，不能使用camelCase命名
+    -->
+    <div id="root">
+      <h2>{{name}}</h2>
+      <h2>當前的n值是:<span v-text="n"></span></h2>
+      <h2>放大10倍後的n值是:<span v-big="n"></span></h2>
+      <h2>放大10倍後的n值是:<span v-big-number="n"></span></h2>
+      <button @click="n++">點我n+1</button>
+      <hr/>
+      <input type="text" v-fbind:value="n">
+    </div>
+    <div id="root2">
+      <input type="text" v-find2:value="x">
+    </div>
+
+    <script type="text/javascript">
+      // 全局的指令(寫法類似filter) -> 對象寫法
+      Vue.directive('fbind2', {
+        bind(element, binding){
+          element.value =  binding.value
+        },
+        inserted(element, binding){
+          element.focus()
+        },
+        update(element, binding){
+          element.value = binding.value
+        }
+      })
+      // 全局的指令(寫法類似filter) -> 函數寫法
+      Vue.directive("big2", function(element, binding){
+        element.innerText = binding.value * 10
+      })
+
+      const vm = new Vue({  
+          el: '#root',  
+          data: {  
+            name: '上硅谷', 
+            n: 1,
+          },
+          // 指令
+          directives: { // 自定義指令就是函數
+            // big 函數何時會被調用? 1.指令與元素成功綁定時(初始生成時) 2.指令所在的模板被重新解析時(name、n 改變時，模板都會重新解析，v-big為了獲取精準的值，只能重新調用)
+            big(element, binding){  // binding 綁定，把元素和指令之間綁定
+              console.log("@",binding)
+              // 第一個參數 element 為真實DOM -> 指令所收到的元素
+              // 第二個參數 binding 為一個物件 -> 本次綁定的訊息
+              element.innerText = binding.value * 10;
+            },
+            // 完整寫法: 對象裡所有的key為字符串，使用 "-" 
+            'big-number'(element, binding){
+              console.log(this)  // 只要在directive中的都是指令，指令就是用來操作元素的，只要是指令裡面的this，都是window
+              element.innerText = binding.value * 10;
+            },
+
+            // 指令與元素成功綁定時，關係建立成功，但這時候頁面還沒有input -> 寫成函數沒法實現
+            /* fbind(element, binding){
+              element.value = binding.value;
+              element.focus()  
+            } */
+            fbind: {
+              // 指令與元素成功綁定時調用(初始生成時)
+              bind(element, binding){
+                // 元素已經好了，但還沒綁到頁面
+                element.value =  binding.value
+                console.log("bind")
+              },
+              // 指令所在元素被插入頁面時調用
+              inserted(element, binding){
+                element.focus()
+              },
+              // 指令所在的模板被重新解析時
+              update(element, binding){
+                element.value = binding.value
+              }
+
+              // 因為bind與update常常邏輯一樣，因此結合二者設計出函數式的寫法
+            }
+          }
+      })  
+
+      new Vue({
+        el:'#root2',
+        data: {
+          x:1
+        }
+      })
+    </script>
+</body>
+</html>

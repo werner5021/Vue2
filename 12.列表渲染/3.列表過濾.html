@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>列表過濾</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+  <!--
+     -->
+  <div id="root">
+    <h2>人員列表-過濾</h2>
+    <input type="text" placeholder="請輸入名字" v-model="keyword">
+    <ul>
+      <li v-for="(p, index) in filterPersonArr" :key="p.id">
+        {{p.name}}-{{p.age}}-{{p.company}}
+      </li>
+    </ul>
+  </div>
+  <script type="text/javascript">
+
+    // 用watch實現
+    // # region
+    // new Vue({
+    //   el: '#root',
+    //   data: {
+    //     keyword: '',
+    //     personArr: [
+    //       {id: '001', name:'金冬天', age:'30', company:'sm'},
+    //       {id: '002', name:'裴柱現', age:'20', company:'sm'},
+    //       {id: '003', name:'金智秀', age:'23', company:'yg'},
+    //       {id: '003', name:'裴秀智', age:'23', company:'jyp'},
+    //     ],
+    //     filterPersonArr: [],
+    //   },
+    //   watch: {
+    //     keyword:{
+    //       immediate:true,
+    //       handler(val){
+    //         this.filterPersonArr = this.personArr.filter((p) => {
+    //           return p.name.indexOf(val) !== -1
+    //         })
+    //       }
+    //     }
+    //   }
+    // })
+    // #endregion
+
+    // 用computed實現
+    new Vue({
+      el: '#root',
+      data: {
+        keyword: '',
+        personArr: [
+          {id: '001', name:'金冬天', age:'23', company:'sm'},
+          {id: '002', name:'裴柱現', age:'33', company:'sm'},
+          {id: '003', name:'金智秀', age:'29', company:'yg'},
+          {id: '003', name:'裴秀智', age:'29', company:'jyp'},
+        ],
+      },
+      computed: {
+        filterPersonArr(){  // 計算屬性這裡沒有newValue可以拿
+          return this.personArr.filter((p) => {
+            return p.name.indexOf(this.keyword) !== -1
+          })
+        }
+      }
+    })
+  </script>
+</body>
+</html>

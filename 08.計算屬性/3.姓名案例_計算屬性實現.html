@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>姓名案例_計算屬性實現</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <!--
+       計算屬性:
+       1. 定義: 要用的屬性不存在，要通過"已有屬性"計算得來
+       2. 原理: 底層借助Object.defineproperty方法提供的getter、setter
+       3. get函數甚麼時候執行?
+        (1) 初次讀取會執行一次
+        (2) 當依賴的數據發生改變時會再次調用
+       4. 優勢: 與methods實現相比，內部有緩存機制(復用)，效率更高，調試方便
+       5. 備註:
+        (1) 計算屬性最終會出現在vm上，直接使用即可
+        (2) 如果計算屬性要被修改，必須寫set函數去響應修改，且set中要引起計算時依賴的數據發生改變
+    -->
+    <div id="root">
+        姓:<input type="text" v-model="lastName" > <br/>
+        名:<input type="text" v-model="firstName" > <br>
+        全名:<span>{{fullName}}</span><br/>
+        fullName不是對象，
+        fullName往vm身上放的時候，自動調用裡面的get，拿到get的返回值，放回vm身上
+    </div>
+    <script type="text/javascript">
+
+        const vm = new Vue({
+            el: "#root",  
+            data:{
+                lastName: "安",
+                firstName: "宥真"
+            },
+            computed:{
+                fullName: {
+                    // get 有甚麼作用? 當有人讀取 fullName 時，get就會被調用，且返回fullName的值
+                    // get 甚麼時候調用? 1.初次讀取fullName 2.所依賴的數據發生變化
+                    get(){  // 讀取fullName時，vue會調用get，且get的this指向調成vm
+                        console.log("get被調用了");
+                        console.log(this);  // 此處this是vm
+                        return  `${this.lastName}-${this.firstName}`
+                    },
+                    // set甚麼時候調用? 當fullName被調用時
+                    set(value){
+                        console.log("set被調用了", value)
+                        const arr = value.split("-")
+                        this.lastName = arr[0]
+                        this.firstName = arr[1]
+                    }
+                }
+            }   
+        })
+    </script>
+</body>
+</html>

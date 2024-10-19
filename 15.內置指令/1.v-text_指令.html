@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>v-text</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <!--
+        v-text
+          1.作用:向其所在的節點中渲染文本內容
+          2.與插值語法的區別: v-tex會替換掉節點中的內容，{{xxx}}不會
+    -->
+    <div id="root">
+        <div>你好，{{name}}</div>
+        <!-- v-text 會替換掉整個innerHTML -->
+        <div v-text="name">你好是不會出現的，因為被替換掉了</div>
+        <!-- v-text 不會解析標籤，而是把所有字符串當成文本解析 -->
+        <div v-text="str"></div>
+    </div>
+
+    <script type="text/javascript">
+        const vm = new Vue({  
+            el: '#root',  
+            data: {   
+               name:'上硅谷',
+               str: '<h3>你好阿!</h3>'
+            },
+        })  
+    </script>
+</body>
+</html>

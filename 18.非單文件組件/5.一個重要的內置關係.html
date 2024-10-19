@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="UTF-8">
+      <title>一個重要的內置關係</title>
+      <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <body>
+      <!--
+        1. 一個重要的內置關係: VueComponent.prototype.__proto__ === Vue.prototype
+        2. 為什麼要有這個關係: 讓組件實例對象(vc)可以訪問到Vue原型上的屬性、方法
+      -->   
+      <div id="root">
+        <school>寫了這個 vue 才會 new VueVomponent()，才有compnent的實例</school>
+      </div>
+  </body>
+  <script type="text/javascript">
+
+    Vue.prototype.x = 99
+
+    // 定義school組件
+    const school = Vue.extend({
+      name: "school",
+      template: `
+        <div>
+          <h2>學校名稱: {{name}}</h2>
+          <h2>學校地址: {{address}}</h2>
+          <button @click="showX">點我輸出x</button>
+        </div>
+      `,
+      data(){
+        return {
+          name: '上硅谷',
+          address: '北京'
+        }
+      },
+      methods: {
+        showX() {
+          console.log(this.x);
+        }
+      },
+    })
+
+    //創建一個vm
+    const vm = new Vue({
+      el: '#root',
+      data: {
+        msg: '你好'
+      },
+      components: {
+        school
+      }
+    })
+
+    console.log(school.prototype.__proto__ === Vue.prototype)
+   
+    // //定義一個構造函數
+    // function Demo(){
+    //   this.a = 1
+    //   this.b = 2
+    // }
+
+    // const d = new Demo()
+
+    // console.log(Demo.prototype)  // 顯式原型屬性，函數才有、實例對象沒有
+    // console.log(d.__proto__)     // 隱式原型屬性，實例對象有
+    // console.log(Demo.prototype === d.__proto__)  // 兩個的原型對象是同一個
+    
+    // // 程序員通過顯式原型屬性操作原型對象，追加一個屬性，值為99
+    // Demo.prototype.x = 99 
+    
+    // console.log("d.__proto__.x=", d.__proto__.x)  // 隱式調用
+    // console.log("d.x=", d.x)  // 直接調用
+    // // 輸出時，a,b 在第一層，x在__proto__內
+</script>
+</html>

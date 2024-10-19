@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .demo{
+      background-color: orange;
+    }
+  </style>
+</head>
+<body>
+  <button id="btn">點我創建一個輸入框</button>
+  <script type="text/javascript">
+    const btn = document.getElementById("btn")
+    btn.onclick = () =>{
+      const input = document.createElement("input")
+      
+      input.focus()  // focus 放在這裡沒有效
+
+      // 可以放在頁面之前有效
+      input.className = "demo";  
+      input.value = 99;
+      input.onclick = () => {alert(1)}  // onclick 放在這裡沒有效
+
+      document.body.appendChild(input)
+
+      // 一定要放在頁面上之後再執行，才有效
+      input.focus()  
+      input.parentElement.style.backgroundColor = "skyblue"
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>姓名案例_計算屬性簡寫</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        姓:<input type="text" v-model="lastName" > <br/>
+        名:<input type="text" v-model="firstName" > <br>
+        全名:<span>{{fullName}}</span><br/>
+    </div>
+    <script type="text/javascript">
+        const vm = new Vue({
+            el: "#root",  
+            data:{
+                lastName: "安",
+                firstName: "宥真"
+            },
+            computed:{
+              // 完整寫法
+              // fullName: {
+              //   get(){ 
+              //       console.log("get被調用了");
+              //       return  `${this.lastName}-${this.firstName}`
+              //   },
+              //   set(value){
+              //       console.log("set被調用了", value)
+              //       const arr = value.split("-")
+              //       this.lastName = arr[0]
+              //       this.firstName = arr[1]
+              //   }
+              // }
+
+              //簡寫: 只有get時，寫成函數(不用寫成配置對象)，函數當getter用
+              fullName(){
+                console.log("get被調用了");
+                return `${this.lastName}-${this.firstName}`
+              }
+            }
+        })
+    </script>
+</body>
+</html>

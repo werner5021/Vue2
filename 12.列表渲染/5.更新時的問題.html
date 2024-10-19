@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>更新時的問題</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+  <!--
+     -->
+  <div id="root">
+    <h2>人員列表-更新</h2>
+    <button @click="updateWinter">更新金冬天</button>
+    <ul>
+      <li v-for="(p, index) in personArr" :key="p.id">
+        {{p.name}}-{{p.age}}-{{p.company}}
+      </li>
+    </ul>
+  </div>
+  <script type="text/javascript">
+
+    new Vue({
+      el: '#root',
+      data: {
+        personArr: [
+          {id: '001', name:'金冬天', age:'23', company:'sm'},
+          {id: '002', name:'裴柱現', age:'33', company:'sm'},
+          {id: '003', name:'金智秀', age:'29', company:'yg'},
+          {id: '003', name:'裴秀智', age:'30', company:'jyp'},
+        ],
+      },
+      methods: {
+        updateWinter(){
+          // this.personArr[0].name='金旼炡';  //奏效
+          // this.personArr[0].age=24;  //奏效
+          // this.personArr[0].company='werner';  //奏效
+          
+          // vue 監測不到
+          // this.personArr[0] = {id: '001', name:'金旼炡', age:'24', company:'werner'}  // 不奏效
+
+          this.personArr.splice(0,1, {id: '001', name:'金旼炡', age:'24', company:'werner'})  //奏效
+
+        }
+      },
+    })
+  </script>
+</body>
+</html>

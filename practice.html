@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    
+    <script type="text/javascript" src="./js/vue.js"></script>
+</head>
+<body>
+  <div id="root">
+    account: <input type="text" v-model.trim="account"> <br>
+    password: <input type="password" v-model="password"><br>
+    age:
+    <input type="number" v-model.number="age"><br>
+  </div>
+  <script type="text/javascript">
+      Vue.config.productionTip = false;  // 阻止 vue 在启动时生成生产提示。
+
+      new Vue({
+        el: '#root',
+        data: {
+          name: 'Octopath',
+          address: 'Tokyo',
+          student: {
+            name: 'Jisoo',
+            age: {
+              realAge: 30,
+              shoeage: 29,
+            },
+            friends: [
+              {name: 'Rose', age: 27},
+              {name: 'Lisa', age: 27},
+            ]
+          }
+        },
+        methods: {
+          addGender(v){
+            Vue.set(this.student, 'gender', '女')
+          },
+          
+          addLeader(){
+            // Vue.set(this, 'leader', 'a')
+            Vue.set(this._data, 'leader', 'a')
+          }
+        }
+      })
+    
+  </script>
+</body>
+</html>

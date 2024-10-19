@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="UTF-8">
+      <title>引出生命週期</title>
+      <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <body>
+      <!--
+        生命週期:
+          1.又稱: 生命週期回調函數、生命週期函數、生命週期鉤子
+          2.是甚麼: Vue在關鍵時刻幫我們調用的一些特殊名稱的函數
+          3.生命週期函數的名字不可更改，但函數的具體內容是程序員根據需求編寫的
+          4.生命週期函數中的this指向是vm或組件實例對象
+      -->
+      <div id="root">
+        <h2 :style="{opacity}">歡迎學習 Vue</h2>
+      </div>
+  </body>
+  <script type="text/javascript">
+    const vm = new Vue({  
+        el: '#root',  
+        data: {   
+          opacity: 1
+        },
+       methods: {
+        /* 
+          methods中只能是兩種調用: 
+            1.事件觸發 -> 無法達成一進頁面就跑效果
+            2.模板執行函數渲染 -> 無限重複調用+渲染
+          因此不能放在methods中執行
+          */
+        // change是vue管理 -> 一般函數
+        // change(){
+        //   // 定時器不是vue管理 -> 箭頭函數
+        //   setInterval(() => {
+        //     this.opacity -= 0.01
+        //     if (this.opacity <= 0) this.opacity=1;
+        //   }, 16)
+        // }
+       },
+       // Vue完成模板解析，並把初始的真實DOM元素放入頁面後(完成掛載)，調用mounted
+       // vue在調mounted時，已維護好this指向
+       mounted() {
+        setInterval(() => {
+          this.opacity -= 0.01  // this往外找
+          if (this.opacity <= 0) this.opacity=1;
+        }, 16)
+      },
+    })  
+
+    // 通過外部的定時器實現: 函數與vue，功能層面結合，但代碼層面分開 -> 不好
+    // setInterval(() => {
+    //   vm.opacity -= 0.01
+    //   if (vm.opacity <= 0) vm.opacity=1;
+    // }, 16)
+</script>
+</html>

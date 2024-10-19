@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>天氣案例</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+      <h2>今天天氣{{info}}</h2>
+
+      <!-- 綁定事件的時候 @xxx="yyy" yyy可以寫一些簡單的語句 -->
+      <!-- <button @click="isHot = !isHot">切換天氣</button> -->
+      
+      <button @click="changeWeather">切換天氣</button>
+    </div>
+    <script type="text/javascript">
+        const vm = new Vue({
+          el: "#root",  
+          data: {
+            isHot: true,
+          },
+          computed: {
+            // info(){
+            //   return this.isHot ? '很熱' : '涼涼'
+            // }
+          },
+          methods: {
+            changeWeather(){
+              this.isHot = !this.isHot
+            }
+          },
+        })
+    </script>
+    <!-- 如果頁面上沒有綁某個數據，即便觸發改變了，在Vue開發者工具中卻不顯示改變，實際上vm裡面是有改變的 -->
+</body>
+</html>

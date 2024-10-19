@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="UTF-8">
+      <title>分析生命週期</title>
+      <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <body>
+      <div id="root" :x="n">
+        <h2>當前的n值是: {{n}}</h2>
+        <button @click="add">點我n+1</button>
+        <button @click="bye">點我銷毀vm</button>
+      </div>
+  </body>
+  <script type="text/javascript">
+    new Vue({  
+      el: '#root',  
+      data: {
+        n: 1
+      },
+      methods: {
+        add() {
+          console.log("add")
+          this.n++
+        },
+        bye(){
+          console.log("bye")
+          this.$destroy()  //點完之後銷毀，再add也沒用
+        }
+      },
+      // watch: {
+      //   n() {
+      //     console.log("n變了");  // destroyed 後消失
+      //   }
+      // },
+      // beforeCreate 無法通過vm訪問到data中的數據、methods中的方法
+      beforeCreate() {
+        console.log("beforeCreate")
+        console.log(this)  // 這時身上沒有_data、沒有n、沒有add
+        // debugger
+      },
+      // created 可以通過vm訪問到data中的數據、methods中的方法
+      created() {
+        console.log("created")
+        console.log(this)
+        // debugger
+      },
+      // beforeMount 虛擬DOM已生成，解析好的內容還沒放上頁面，頁面顯示未經編譯的DOM結構
+      beforeMount() {
+        console.log("beforeMount")
+        console.log(this)  
+        // debugger
+        document.querySelector("h2").innerText = "哈哈"  // 這裡操作DOM最後都會無效，在下一個步驟真實DOM就會被vue替換掉，
+      },
+      // mounted 頁面顯示經過編譯的DOM結構
+      mounted() {
+        console.log("mounted")
+        console.log(this)  
+        // debugger
+        // document.querySelector("h2").innerText = "123"  // ，這裡操作DOM會有效，但是避免
+        console.log(this.$el instanceof HTMLElement)  // mounted前，vue.$el 已存真實DOM節點   
+      },
+      // beforeUpdate 數據是新的，但頁面是舊的，兩者尚未同步
+      beforeUpdate() {
+        console.log("beforeUpdate");
+        console.log(this.n);  // 這時數據是新的，但頁面還是舊的，所以n為2，但是debugger時顯示為1
+        // debugger
+      },
+
+      /*
+        beforeUpdate 到 updated 中間，根據新數據，生成新的虛擬DOM，再與舊的虛擬DOM比較，最終完成頁面更新
+        也就是 Model -> View的更新
+      */
+
+      // updated 數據與頁面都是新的，同步完成，
+      updated() {
+        console.log("updated");
+        console.log(this.n);  // 數據新的，頁面新的，n都為2
+        debugger
+      },
+      // beforeDestroy 這時vm中所有的data、methods、指令...，都還可用，一般在這個階段關閉定時器、取消訂閱消息、解綁自定義事件等收尾操作
+      beforeDestroy() {
+        console.log("beforeDestroy");
+        console.log(this.n);  // 可以訪問
+        this.add();  // 函數執行了，但是在銷毀流程中，對數據的操作，不會觸發更新
+      },
+      // destroyed 移除監視、子組件、事件監聽器完成
+      destroyed() {
+        
+      },
+    })  
+
+    // 沒有el只會進行 beforeCreate, created，等其他地方觸發vm.$mount("#root")才會繼續走 beforeMount, mounted
+    const vm = new Vue({})
+
+    // 如果 root 裡面是空的，使用 template
+    new Vue({
+      el: "#root2",
+      // 要使用一個div包起來，template裡面不能有兩個根節點
+      // template 會完全替換掉 #root 裡面的節點，也就是 id="root" :x="n" 都會消失
+      template: `
+        <div>
+          <h2>當前的n值是: {{n}}</h2>
+          <button @click="add">點我n+1</button>
+        </div>
+          `,
+      data: {}
+    })
+</script>
+</html>

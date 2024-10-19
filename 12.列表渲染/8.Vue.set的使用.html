@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Vue監測數據改變的原理</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+  <!--
+        -->
+  <div id="root">
+    <h1>學校訊息</h1>
+    <h2>學校名稱: {{name}}</h2>
+    <h2>學校地址: {{address}}</h2>
+    <hr/>
+    <h1>學生訊息</h1>
+    <button @click="addGender">添加一個性別屬性，默認值為男</button>
+    <h2>姓名: {{student.name}}</h2>
+    <h2 v-if="student.gender">性別: {{student.gender}}</h2>
+    <h2>年齡: 真實:{{student.age.realAge}}， 對外:{{student.age.showAge}}</h2>
+    <ul>
+      <li v-for="(f,index) in student.friends" :key="index">
+        {{f.name}}--{{f.age}}</li>
+    </ul>
+    <hr>
+    <h2>校長: {{leader}}</h2>
+      <button @click="addLeader">無法添加校長在vue實例對象身上</button>
+    </div>
+  <script type="text/javascript">
+
+    const vm = new Vue({
+      el: '#root',
+      data: {
+        name: '上硅谷',
+        address: '北京',
+        student: {
+          name: 'Tom',
+          age: {
+            realAge: 30,
+            showAge: 25,
+          },
+          friends: [
+            {name: 'Jerry', age: 32},
+            {name: 'tomy', age: 35},
+          ]
+        }
+      },
+      methods: {
+        addGender(val){
+          // 兩種寫法都可以
+          // Vue.set(this.student, 'gender', '男')
+          this.$set(this.student, 'gender', '男')
+        },
+        addLeader(){
+          // 不能添加往vue實例對象身上添加響應式數據
+          Vue.set(vm, 'leader', '某A')
+          // 不能添加往vm身上根數據添加響應式數據
+          Vue.set(vm._data, 'leader', '某B')
+        }
+      },
+      })
+  </script>
+</body>
+</html>
+
+// Vue 身上的方法，添加額外屬性用 set
+Vue.set(vm._data.student,'gender','男'')
+// vm  身上的方法，添加額外屬性用 $set
+vm.$set(vm._data.student,'gender','男'') 

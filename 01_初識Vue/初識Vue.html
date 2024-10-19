@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>初識Vue</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <!-- 
+        1. 想讓Vue工作，要創建一個Vue實例，且傳入一個配置對象
+        2. 容器與Vue實例，是一對一的關係
+        3. 真實開發只有一個Vue實例，並配合組件使用
+        4. {{ xxx }} 裡面為表達式，且與data中的xxx雙向綁定
+    -->
+
+    <!-- 準備好一個容器，讓做好的界面可以放進去 -->
+    <div id="root">
+        <h1>Hello, {{ name }}, {{ address }}</h1>
+    </div>
+
+    <div id="root2">
+        <h1>Hello, {{ name }}, {{ address }}</h1>
+    </div>
+    <!-- live server 在本機5500端口開一台內置的小服務器 -->
+
+    <script type="text/javascript">
+        Vue.config.productionTip = false;  // 阻止 vue 在启动时生成生产提示。
+
+        // 創建 Vue實例
+        new Vue({  // 傳一個配置對象進來
+            el: '#root',  // el 用於指定當前Vue實例為哪個容器服務，值通常為css選擇器
+            data: {       // data 中存儲數據，供el所指定的容器使用，值暫時先寫成一個對象
+                name: '上硅谷',
+                address: '北京',
+            }
+        })  
+
+        new Vue({ 
+            el: '#root2',  
+            data: {   
+                name: '下硅谷',
+                address: '杭州',
+            }
+        }) 
+        
+    </script>
+</body>
+</html>

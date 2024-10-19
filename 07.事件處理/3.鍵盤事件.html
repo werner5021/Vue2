@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>事件修飾符</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <style>
+        
+    </style>
+</head>
+<body>
+    <!--
+        1.Vue中常用的按鍵別名
+            enter, delete, esc, space, 
+            tab, (特殊，必須配合keydown使用) 
+            up, down, left, right
+        2.Vue為提供別名，使用按鍵的原始key值綁定，注意要轉為kebab-case(短橫線連接)
+        3.系統修飾符(用法特殊): ctrl, alt, shift, meta
+            (1) 配合keyup使用:按下修飾鍵的同時，再按下其他鍵，之後釋放其他鍵，事件才觸發
+            (2) 配合keydown使用: 正常觸發
+        4.可以使用keyCode綁定具體的按鍵(不建議)
+        5.Vue.config.keyCodes.自定義鍵盤名 = 鍵碼，可自定義別名
+    -->
+    <div id="root">
+        <h2>歡迎來到{{name}}學習</h2>
+        <input type="text" placeholder="使用原生的鍵盤 keycode(按下enter)" @keyup="showInfo">
+        <input type="text" placeholder="按下Enter提示輸入2" @keyup.enter="showInfo2">
+        <input type="text" placeholder="使用鍵盤key(按下CapsLock，轉橫線)" @keyup.caps-lock="showInfo2">
+        <input type="text" placeholder="系統修飾鍵，使用keydown比較方便" @keydown.shift="showInfo2">
+        <input type="text" placeholder="自定義鍵盤名" @keydown.huiche="showInfo2">
+        <input type="text" placeholder="按下Ctrl+y" @keydown.ctrl.y="showInfo2">
+
+    </div>
+    <script type="text/javascript">
+        Vue.config.keyCodes.huiche = 13  //定義一個別名按鍵
+
+        const vm = new Vue({
+            el: "#root",  
+            data: {
+                name: "尚硅谷"
+            },
+            methods: {
+                showInfo(e){
+                    if (e.keyCode !== 13) return;  
+                    console.log("value=",e.target.value)
+                    console.log("keyCode=",e.keyCode)
+                    console.log("key=",e.key)
+                },
+                showInfo2(e){
+                    console.log(e.target.value) 
+                },
+                
+            },
+            
+        })
+    </script>
+</body>
+</html>

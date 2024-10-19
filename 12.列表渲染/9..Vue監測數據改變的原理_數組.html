@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Vue監測數據改變的原理_數組</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+  <!--
+        -->
+  <div id="root">
+    <h1>學校訊息</h1>
+    <h2>學校名稱: {{school.name}}</h2>
+    <h2>學校地址: {{school.address}}</h2>
+    <hr/>
+    <h1>學生訊息</h1>
+    <button @click="addGender">添加一個性別屬性，默認值為男</button>
+    <h2>姓名: {{student.name}}</h2>
+    <h2 v-if="student.gender">性別: {{student.gender}}</h2>
+    <h2>年齡: 真實:{{student.age.realAge}}， 對外:{{student.age.showAge}}</h2>
+    <h2>朋友</h2>
+    <ul>
+      <li v-for="(f,index) in student.friends" :key="index">
+        {{f.name}}--{{f.age}}</li>
+    </ul>
+    <h2>愛好</h2>
+    <ul>
+      <li v-for="(h,index) in student.hobby" :key="index">
+        {{h}}</li>
+    </ul>
+  </div>
+  <script type="text/javascript">
+
+    const vm = new Vue({
+      el: '#root',
+      data: {
+        school:{
+          name: '上硅谷',
+          address: '北京',
+        },
+        student: {
+          name: 'Tom',
+          age: {
+            realAge: 30,
+            showAge: 25,
+          },
+          friends: [
+            {name: 'Jerry', age: 32},
+            {name: 'tomy', age: 35},
+          ],
+          hobby:['抽菸','喝酒','燙頭']
+        }
+      },
+      methods: {
+        addGender(val){
+          // 兩種寫法都可以
+          // Vue.set(this.student, 'gender', '男')
+          this.$set(this.student, 'gender', '男')
+        },
+      },
+    })
+    /*
+      hobby 為數組，要修改數組:
+      1. vue 不會對數組裡面的元素匹配getter、setter -> 透過索引值更改元素無效
+        ex: vm._data.student.hobby[0] 無效
+      2. vue 會包裝幾個修改數組方法，push, pop, shift, unshift, splice, sort, reverse
+         使用以上vue 包裝的方法後會做兩件事
+          (1) 調用 js 中的數組方法 (Array.prototype.push)
+          (2) 重新解析模板 -> 生成虛擬DOM ...
+        ex: vm._data.student.hobby.push('學習')
+      3. 使用set
+        vm.$set(vm._data.student.hobby, 1, '打遊戲')
+    */
+  </script>
+</body>
+</html>

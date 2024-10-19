@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="UTF-8">
+      <title>幾個注意點</title>
+      <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <body>
+      <!--
+        幾個注意點:
+          1.關於組件名:
+          一個單詞組成:
+            第一種寫法(首字小寫): school
+            第二種寫法(首字大寫): School
+          多個單詞組成:
+            第一種寫法(kebab-case): my-school
+            第二種寫法(CamelCase): MySchool (需要腳手架支持)
+          備註:
+            (1)組件名盡可能迴避 html 中已有的元素名稱，例如: h2、H2
+            (2)可以使用 name 配置項，指定組件在開發者工具中呈現的名字
+          
+          2.關於組件標籤:
+            第一種寫法: <school></school>
+            第二種寫法: <school/>
+            備註: 不用使用腳手架時，<school/>會導致後續組件不能渲染
+          3.一個簡寫方式:
+            const school = Vue.extend(options) 可簡寫為 constt school = options
+      -->
+      <div id="root">
+        <h1>{{msg}}</h1>
+        <school></school>
+        <hr/>
+        <!-- 沒有腳手架時，自閉合只會渲染第一個，有腳手架的環境就 OK -->
+        <school/>
+        <school/>
+        <school/>
+      </div>
+  </body>
+  <script type="text/javascript">
+    // 定義組件
+    const s = Vue.extend({
+      name: "atguigu",  // 沒寫name，vue devtool 就用註冊的名稱，有寫在 devtool中就用 name 定義的
+      template: `
+        <div>
+          <h2>學校名稱: {{name}}</h2>
+          <h2>學校地址: {{address}}</h2>
+        </div>
+      `,
+      data(){
+        return {
+          name: "上硅谷",
+          address: "北京",
+        }
+      }
+    })
+
+    // 簡寫方式，不管是否簡寫，vue 底層都會調用Vue.extend
+    const s2 = {
+      name: "atguigu2",  // 沒寫name，vue devtool 就用註冊的名稱，有寫在 devtool中就用 name 定義的
+      template: `
+        <div>
+          <h2>學校名稱2: {{name}}</h2>
+          <h2>學校地址2: {{address}}</h2>
+        </div>
+      `,
+      data(){
+        return {
+          name: "上硅谷2",
+          address: "北京2",
+        }
+      }
+    }
+
+    new Vue({
+      el: "#root",
+      data: {
+        msg: "歡迎學習vue",
+      },
+      components: {
+        school: s  
+      }
+    })
+
+</script>
+</html>

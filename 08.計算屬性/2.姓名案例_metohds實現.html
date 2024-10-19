@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>計算屬性_metohds實現</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <style>
+    </style>
+</head>
+<body>
+    <!--
+        data中數據變化時，vue的模板就會重新解析，
+        1. 如果有用到 firstName 會重新讀取，沒有用到就不讀取
+        2. 如果有方法，也會重新調用(因為不知道函數返回之跟之前是否一樣)
+    -->
+    <div id="root">
+        姓:<input type="text" v-model="lastName" > <br/>
+        名:<input type="text" v-model="firstName" > <br>
+        全名:<span>{{fullName()}}</span>
+    </div>
+    <script type="text/javascript">
+
+        const vm = new Vue({
+            el: "#root",  
+            data:{
+                lastName: "安",
+                firstName: "宥真"
+            },
+            methods:{
+                fullName(){
+                    console.log("調用 fullName 中...");
+                    return `${this.lastName}-${this.firstName}`
+                }
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Vue監測數據改變的原理</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+  <!--
+    1. 加工vm中的data (加工後能做響應式)
+    2. vm._data = data (數據代理)
+    3. data中的name發生變化
+    4. 調用setter -> reactiveSetter 響應式的setter
+    5. 重新解析模板
+    6. 生成新的虛擬DOM
+    7. 新舊DOM對比
+    8. 更新頁面
+
+    加工能實現對對象中的屬性的監視
+     -->
+  <div id="root">
+    <h2>學校名稱: {{name}}</h2>
+    <h2>學校地址: {{address}}</h2>
+    
+  </div>
+  <script type="text/javascript">
+
+    const vm = new Vue({
+      el: '#root',
+      data: {
+        name: '上硅谷',
+        address: '北京',
+        student: {
+          name: 'Tom',
+          age: {
+            realAge: 30,
+            showAge: 25,
+          },
+          friends: [
+            {name: 'Jerry', age: 32}
+          ]
+        }
+      },
+
+      // 觀察每一層對象、數組的屬性都有getter、setter，因為 Vue 有做遞歸檢查是否為對象，有就給
+      // Vue 監測數據的原理就是 setter，所有的 setter 改變都會生成新的虛擬DOM、解析模板
+    })
+  </script>
+</body>
+</html>

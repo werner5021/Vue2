@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>MVVM 模型</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <!--
+        MVVM 模型
+            M : 模型 Model → data中的數據
+            V : 視圖 View → 模板
+            VM : 視圖模型 ViewModel → Vue 實例
+        觀察發現:
+            1. data中所有的屬性，最後都出現在vm身上
+            2. vm 身上所有的屬性、Vue原型上所有屬性，在Vue模板中都可直接使用
+       -->
+    <div id="root">
+        <h1>vue實例的data裡的屬性，{{name}}</h1>
+        <h1>vue實例的data裡的屬性，{{address}}</h1>
+        <h1>表達式，{{1+1}}</h1>
+        <h1>vm 身上的函式，{{$options}}</h1>
+        <h1>vue 原型的函式，{{$emit}}</h1>
+        頁面上，只有vm身上有的屬性、方法才能使用
+    </div>
+
+    <script type="text/javascript">
+        Vue.config.productionTip = false;  // 阻止 vue 在启动时生成生产提示。
+
+        const vm = new Vue({
+            el: "#root",  
+            data: {
+                name: "尚硅谷",   // 會出現在vue實例中，model才能用
+                address: "北京",  // 會出現在vue實例中，model才能用
+            }
+        })
+        console.log(vm)
+    </script>
+</body>
+</html>

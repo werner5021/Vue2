@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="UTF-8">
+      <title>總結生命週期</title>
+      <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <body>
+      <!--
+        常用的生命週期鉤子
+          1.mounted: 發送ajax請求、啟動定時器、綁定自定義事件、訂閱消息等【初始化操作】
+          2.beforeDestroy: 清除定時器、解綁自定義事件、取消訂閱消息等【收尾操作】
+
+        關於銷毀vue實例
+          1. 銷毀後借助vue開發工具看不到任何訊息
+          2. 銷毀後自定義事件會失敗，但原生DOM事件依然有效
+          3. 一般不會在beforeDestroy操作數據，因為即便操作數據，也不會再觸發更新流程了
+      -->
+      <div id="root">
+        <h2 :style="{opacity}">歡迎學習 Vue</h2>
+        <button @click="opacity = 1">透明度設置為1</button>
+        <button @click="stop">點我停止變換</button>
+      </div>
+  </body>
+  <script type="text/javascript">
+    const vm = new Vue({  
+        el: '#root',  
+        data: {   
+          opacity: 1
+        },
+       methods: {
+        stop() {
+          // clearInterval(id1)  // 報錯，methods中看不到mounted的內容
+          
+          // 停止定時器，但響應還在，可以移到beforeDestroy中做
+          //  clearInterval(this.timer)
+
+          // 銷毀vm，但如果只銷毀vm時，定時器會繼續運作，所以clearInterval
+          // 調用$destroyed走銷毀流程，銷毀前一定走 beforeDestroy，故在其中 clearInterval
+          this.$destroy()
+        }
+       },
+       mounted() {
+        // const id1 = setInterval(() => {
+        //   this.opacity -= 0.01  // this往外找
+        //   if (this.opacity <= 0) this.opacity=1;
+        // }, 16)
+        this.timer = setInterval(() => {
+          this.opacity -= 0.01
+          if (this.opacity <= 0) this.opacity=1;
+        }, 16)
+      },
+      beforeDestroy() {
+        console.log("vm 即將銷毀")
+        clearInterval(this.timer)
+      },
+    })  
+</script>
+</html>

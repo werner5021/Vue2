@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>回顧Object.definedProperty方法</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+        let person = {
+            name: 'jisoo',
+            gender: 'female',
+        }
+
+        // 1. defineProperty 加入的屬性，不可枚舉、不參與遍歷
+        Object.defineProperty(person, 'age', {
+            value: 28
+        })
+        console.log("pserson = ", person)
+        console.log(Object.keys(person))  // ['name','gender']
+
+        for (let index in person) {
+            console.log('@', person[index])  // @jisoo, @female
+        }
+
+        console.log("--------------------------------------")
+
+        // 2. defineProperty 加入的屬性，可以追加許多進階設定
+        Object.defineProperty(person, 'endorsement', {
+            value: 'dior',
+            enumerable: true,   // 控制屬性是否可以枚舉，默認為false
+            writable: true,     // 控制屬性是否可以被修改，默認為false
+            configurable: true, // 控制屬性是否可以被刪除，默認為false
+        })
+
+        // 需求: person2 對象有一個age屬性，該屬性讀取number，而非自己填入的
+        let number = 25
+        let person2 = {
+            name: 'rose',
+            gender: 'female',
+        }
+        /*
+            如果直接使用 age:number，
+            之後如果number改變，person.age不會跟著變，
+            number跟person的關係僅限於定義的時候
+        */
+        Object.defineProperty(person2, "age", {
+            // 當有人讀取person2的age屬性時，get函數(getter)會被調用，且返回age的值
+            get() {
+                console.log("有人讀取age屬性")
+                return number
+            },
+            // 當有人修改person2的age屬性時，set函數sgetter)會被調用，且收到修改的具體值
+            set(value) {
+                console.log(`有人修改age屬性，且值是${value}`)
+                number = value
+            }
+        })
+    </script>
+</body>
+</html>

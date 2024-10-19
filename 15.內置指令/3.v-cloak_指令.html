@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>v-cloak</title>
+    <style>
+        [v-cloak]{
+            display: none ;
+        }
+    </style>
+    </head>
+<body>
+    <!--
+        v-cloak(沒有值):
+          1.本質是一個特殊屬性，Vue實例創建完畢並接管容器後，會刪除v-cloak
+					2.使用css配合v-cloak可以解決網速慢時，展現出{{xxx}}的問題
+    -->
+    <div id="root">
+        <h2 v-cloak>{{name}}</h2>
+    </div>
+    <!-- 模擬一個延遲加載5秒的vue.js，js 組塞 -->
+    <script type="text/javascript" src="http://localhost:8080/resource/5s/vue.js"></script>
+
+</body>
+<script type="text/javascript">
+    const vm = new Vue({  
+        el: '#root',  
+        data: {   
+          },
+    })  
+</script>
+</html>

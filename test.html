@@ -1,0 +1,21 @@
+<input type="file" id="files" name="files[]" onchange="handleFiles(this.files)">
+<div id="fileOutput"></div>
+
+<script>
+    function handleFiles(files) {
+        const file = files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const output = document.getElementById("fileOutput");
+            output.textContent = e.target.result;
+        }
+        reader.readAsText(file);
+    }
+
+    function showFileInput() {
+        const fileInput = document.getElementById("fileInput");
+        fileinput.click();
+    }
+    
+</script>

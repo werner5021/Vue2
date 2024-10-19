@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>數據綁定</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <!--
+        Vue 有兩種數據綁定的方式
+            1.單向綁定(v-bind): 數據只能從data流向頁面
+            2.雙向綁定(v-model): 數據可從data流向頁面，也能從頁面流向data
+                PS:
+                    1. 雙向綁定一般用在表單元素上(input、select)
+                    2. v-model:value 可以簡寫為 v-model，因為v-model默認收集的就是value值
+    -->
+    <div id="root">
+        <!-- 普通寫法 -->
+        單向數據綁定:<input type="text" v-bind:value="name"><br/>
+        雙向數據綁定:<input type="text" v-model:value="name1"><br/>
+        <!-- 簡單寫法 -->
+        單向數據綁定:<input type="text" :value="name"><br/>
+        雙向數據綁定:<input type="text" v-model="name1"><br/>
+
+        <!-- 以下代碼錯誤，v-model 只能用在表單類元素(都有value值) -->
+        <h2 v-model:x="name">你好啊</h2>
+    </div>
+
+    <script type="text/javascript">
+        Vue.config.productionTip = false;  // 阻止 vue 在启动时生成生产提示。
+
+        new Vue({
+            el: '#root',
+            data: {
+                name: '瑞克．艾斯理',
+                name1: '榮恩．衛斯理'
+            },
+        })
+    </script>
+</body>
+</html>

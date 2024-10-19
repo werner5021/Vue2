@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Vue監測數據改變的原理_數組</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+  <!--
+        -->
+  <div id="root">
+    <!--  
+      Vue 監視數據的原理
+        1.vue會監視data中所有層次的數據
+        2.如何監測對象中的數據?
+          通過setter實現監視，且要在new Vue時就傳入要監測的數據
+          (1)對象中後追加的屬性，Vue默認不做響應式處理
+          (2)如要給後追加的屬性響應式，使用下列API:
+            Vue.set(target, propertyName/index, value)
+            vm.$set(target, propertyName/index, value)
+        3.如何監測數組中的數據?
+          通過包裹數據更新的方法實現，本質就是做了兩件事:
+          (1)調用原生對應的方法對數組進行更新
+          (2)重新解析模板，進而更新頁面
+        4.在Vue修改數組中的某個元素一定要使用下列方法:
+          (1)使用這些API: push, pop, shift, unshift, slice, sort, reverse
+          (2)Vue.set() 或 vm.$set()
+
+        特別注意: Vue.set() 和 vm.$set()不能給vm 或 vm 的根數據對象添加屬性
+    -->
+
+    <button @click="addAge">年齡 +1</button> <br/>
+    <button @click="addGender">添加性別屬性，默認值:女</button><br/>
+    <button @click="changeGender">修改性別屬性</button><br/>
+    <button @click="addFriend">在列表首位添加一個朋友</button><br/>
+    <button @click="changeName">修改第一個朋友的名字為: peggy</button><br/>
+    <button @click="addHobby">添加一個愛好</button><br/>
+    <button @click="changeHobby">修改第一個愛好為: 開車</button><br/>
+    <button @click="filterHobby">過濾愛好中的: 抽菸</button><br/>
+
+    <h1>學生訊息</h1>
+    <h3>姓名: {{student.name}}</h3>
+    <h3>年齡: {{student.age}}</h3>
+    <h3 v-if="student.gender">性別: {{student.gender}}</h3>
+    <h3>愛好</h3>
+    <ul>
+      <li v-for="(h,index) in student.hobby" :key="index">
+        {{h}}
+      </li>
+    </ul>
+    <h2>朋友</h2>
+    <ul>
+      <li v-for="(f,index) in student.friends" :key="index">
+        {{f.name}}--{{f.age}}
+      </li>
+    </ul>
+  </div>
+  <script type="text/javascript">
+
+    const vm = new Vue({
+      el: '#root',
+      data: {
+        student: {
+          name: 'Jane',
+          address: '大安區',
+          age: 31,
+          hobby:['抽菸','喝酒','燙頭'],
+          friends: [
+            { name: 'Jerry', age: 32},
+            { name: 'Tony', age: 35},
+          ],
+        },
+      },
+      methods: {
+        addAge() {
+          this.student.age++;
+        },
+        addGender() {
+          // 兩個都可以
+          Vue.set(vm.student, 'gender', '女')
+          vm.$set(this.student, 'gender', '女')
+        },
+        changeGender(){
+          if (!vm.student.gender){
+            return;
+          }
+          if (vm.student.gender === '女') {
+            this.student.gender = '男'
+          } else {
+            this.student.gender = '女'
+          }
+        },
+        addFriend(){
+          this.student.friends.unshift({name: 'winter', age: 23})
+        },
+        changeName(){
+          this.student.friends[0].name = 'peggy'
+        },
+        addHobby(){
+          this.student.hobby.push('玩溜溜球')
+        },
+        changeHobby(){
+          // 兩個方法都可以
+          // this.student.hobby.splice(0,1,'開車')
+          Vue.set(this.student.hobby, 0, '開車')
+        },
+        filterHobby(){
+          this.student.hobby = this.student.hobby.filter((h) =>{
+            return h !== '抽菸';
+          })
+        }
+      },
+    });
+  </script>
+</body>
+</html>

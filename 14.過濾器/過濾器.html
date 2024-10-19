@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>過濾器</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <script type="text/javascript" src="../js/dayjs.min.js"></script>
+</head>
+<body>
+  <!--
+    過濾器:
+      定義: 對要顯示的數據進行特定格式化後再顯示(適用於一些簡單邏輯的處理)
+      語法: 
+        1.註冊過濾器: Vue.filter(name, callback) 或 new Vue(filters:{})
+        2.使用過濾器: {{ xxx | filterName}} 或 :attr=" yyy | filterName "
+      備註:
+        1.過濾器也可以接收額外參數，多個過濾器可以串聯
+        2.並沒有改變原本的數據，而是產生新的對應的數據  
+  -->
+  <div id="root">
+    <h2>顯示格化後的時間</h2>
+    <h3>現在是 {{time}} (時間戳)</h3>
+    <h3>現在是 {{formatTime}} (計算屬性實現)</h3>
+    <h3>現在是 {{getFormatTime()}} (methods實現)</h3>
+    <!-- 讀取time -> time作為參數傳入timeFormater -> 拿到返回值，替換整個插值語法 -->
+    <h3>現在是 {{time | timeFormater}} (過濾器實現)</h3>
+    <h3>現在是 {{time | timeFormater('YYYY-MM-DD')}} (過濾器實現(傳參))</h3>
+    <h3>現在是 {{time | timeFormater('YYYY-MM-DD') | mySlice }} (過濾器串聯)</h3>
+  
+    <h3 :x="msg | globalSlice">v-bind也能使用過濾器</h3>
+  </div>
+
+  <div id="root2">
+    <h2>{{msg | mySlice}} (不能使用其他vm的局部過濾器)</h2> <!-- 無法使用其他vm的局部過濾器 -->
+    <h2>{{msg | globalSlice}} (使用全局的過濾器)</h2>
+  </div>
+  <script type="text/javascript">
+    // 全局的過濾器: 必須在 new Vue 之前準備好
+    Vue.filter('globalSlice', function(value){
+      return value.slice(0,4);
+    })
+
+    new Vue({
+      el: '#root',
+      data: {
+        time: 1721456834038,
+        msg: 'hello, Pokemon Master'
+      },
+      computed:{
+        formatTime(){
+          return dayjs(this.time).format('YYYY-MM-DD HH:mm:ss') // 展示
+        }
+      },
+      methods: {
+        getFormatTime(){
+          return dayjs(this.time).format('YYYY-MM-DD HH:mm:ss')
+        }
+      },
+      // 局部過濾器: vm裡面的filter是局部過濾器，只有自己能用，不能給其他vm使用
+      filters: {
+        // 過濾器的本質是函數
+        timeFormater(value, str='YYYY-MM-DD HH:mm:ss' ){  // 沒有傳參預設為要過濾的，有傳參時，參數會做為第二個傳入
+          return dayjs(value).format(str)
+        },
+        mySlice(value){
+          return value.slice(0,4)
+        }
+      }
+    })
+
+    new Vue({
+      el: '#root2',
+      data: {
+        msg: 'hello, my friend!'
+      }
+    })
+      
+    
+  </script>
+</body>
+</html>

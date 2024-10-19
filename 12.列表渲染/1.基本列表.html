@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>基本列表</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+  <!--
+    v-for 指令:
+      1.用於展示列表數據
+      2.語法:v-for="(item,index) in xxx" :key="yyy"
+      3.可遍歷:數組、對象、字符串(用得少)、指定次數(用的少)
+  -->
+  <div id="root">
+    <!-- 遍歷數組 -->
+    <h2>人員列表</h2>
+    <!-- <ul>
+      <li v-for="p in personArr" :key="p.id">
+        {{p.name}}-{{p.age}}
+      </li>
+    </ul> -->
+    <ul>
+      <li v-for="(p, index) in personArr" :key="index">
+        {{p.name}}-{{p.age}}
+      </li>
+    </ul>
+
+    <!-- 遍歷對象 -->
+    <h2>汽車訊息</h2>
+    <ul>
+      <li v-for="(item, index) in car" :key="index">
+        {{item}}-{{index}}
+      </li>
+    </ul>
+
+    <!-- 遍歷字符串 (用的少) -->
+    <h2>字符串</h2>
+    <ul>
+      <li v-for="(char, index) in str" :key="index">
+        {{char}}-{{index}}
+      </li>
+    </ul>
+
+    <!-- 遍歷指定次數 (用的少) -->
+    <h2>指定次數</h2>
+    <ul>
+      <li v-for="(number, index) in 10" :key="index">
+        {{指定次數}}-{{index}}
+      </li>
+    </ul>
+    
+  </div>
+  <script type="text/javascript">
+      new Vue({
+      el: '#root',
+      data: {
+        personArr: [
+          {id: '001', name:'IU', age:'30'},
+          {id: '002', name:'yujin', age:'20'},
+          {id: '003', name:'winter', age:'23'},
+          ]
+          ,
+        car: {
+          name: 'audi A8',
+          price: '70W',
+          color: 'black',
+        },
+        str: 'hello'
+      },
+    })
+  </script>
+</body>
+</html>

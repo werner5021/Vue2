@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>事件修飾符</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <style>
+        *{
+            margin-top: 20px;
+        }
+        .demo1{
+            height:50px;
+            background-color: skyblue;
+        }
+        .box1{
+            padding: 5px;
+            background-color: skyblue;
+        }
+        .box2{
+            padding: 5px;
+            background-color:rgb(213, 225, 230);
+        }
+        .list{
+            width: 200px;
+            height: 200px;
+            background: peru;
+            overflow: auto;
+        }
+        li{
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <!--
+        Vue中常見的事件修飾符
+            1.prevent:阻止默認事件
+            2.stop: 阻止事件冒泡
+            3.once: 事件只觸發一次
+            4.capture: 使用事件的捕獲模式
+            5.self: 只有event.target是當前操作的元素時，才是觸發事件
+            6.passive: 事件的默認行為立即執行，無須等帶回調執行完畢
+         -->
+    <div id="root">
+        <h2>歡迎來{{name}}學習</h2>
+        <!-- 阻止默認事件 -->
+        <a href="http://www.books.com" @click.prevent="showInfo">點我提示訊息</a>
+        <!-- 阻止事件冒泡 -->
+        <div class="demo1" @click="showInfo">
+            <button @click.stop="showInfo">點我提示訊息</button>
+            <!-- 修飾符可以連續寫，同時阻止兩個事件(冒泡、導頁) -->
+            <a href="http://www.books.com" @click.stop.prevent="showInfo">點我提示訊息</a>
+        </div>
+
+        <!-- 事件只觸發一次 -->
+        <button @click.once="showInfo">點我提示訊息</button>
+        <!-- 使用事件的捕獲模式 -->
+        <div class="box1" @click.capture="showMsg(1)"> <!-- 捕獲階段就開始處理-->
+            div1
+            <div class="box2" @click="showMsg(2)">
+                div2
+            </div>
+        </div>
+        <!-- 只有event.target是當前操作的元素時，才是觸發事件 -->
+        <div class="demo1" @click.self="showInfo2">
+            <button @click="showInfo2">點我提示訊息</button>
+        </div>
+        <!-- 事件的默認行為立即執行，無須等帶回調執行完畢 -->
+        <ul class="list" @wheel="demo">
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+        </ul>
+        <!-- 原本:觸發事件(滾動)，執行事件回調(demo)，執行完畢再做事件默認行為(往下動) -->
+        <!-- passive:觸發事件(滾動)，不等回調，直接執行事件默認行為(往下動)，再執行事件回調(demo) -->
+    </div>
+    <script type="text/javascript">
+
+        const vm = new Vue({
+            el: "#root",  
+            data: {
+                name: "尚硅谷"
+            },
+            methods: {
+                showInfo(e){
+                    alert("你好")
+                },
+                showMsg(msg){
+                    console.log(msg)
+                },
+                showInfo2(e){
+                    console.log(e.target);
+                },
+                demo(){
+                    for (let i=0; i<10000; i++){
+                        console.log("#")
+                    }
+                    console.log("finish");
+                }
+            },
+            
+        })
+    </script>
+</body>
+</html>
